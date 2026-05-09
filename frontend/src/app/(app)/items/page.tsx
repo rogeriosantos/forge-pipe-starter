@@ -25,11 +25,12 @@ export default async function ItemsPage() {
   }
 
   return (
-    <div className="grid gap-6">
-      <div className="flex items-center justify-between gap-2">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Items</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
+    <div className="space-y-8">
+      <header className="flex flex-wrap items-end justify-between gap-4">
+        <div className="space-y-2">
+          <p className="text-sm font-medium text-primary">Items</p>
+          <h1 className="text-3xl font-semibold tracking-tight">All items</h1>
+          <p className="max-w-2xl text-[15px] text-muted-foreground">
             The reference CRUD module shipped with this starter.
           </p>
         </div>
@@ -37,7 +38,7 @@ export default async function ItemsPage() {
           <Plus className="h-4 w-4" />
           New item
         </Link>
-      </div>
+      </header>
 
       {errorMessage ? (
         <div role="alert" className="rounded-md border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">

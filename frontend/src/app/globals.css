@@ -39,82 +39,143 @@
   --color-popover: var(--popover);
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
+  --radius-4xl: 32px;
 }
 
+/* ============================================================================
+   Apple HIG design system — palette: Ocean
+   Reference: app-forge-teams/references/_shared/apple-design-system.md
+   Pick ONCE per app. To re-palette, swap the four `--color-(primary|secondary)*`
+   values below; everything else propagates.
+   ============================================================================ */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* Accent — Ocean */
+  --color-primary-hex: #007AFF;
+  --color-primary-tint: rgba(0, 122, 255, 0.10);
+  --color-secondary-hex: #5AC8FA;
+  --color-secondary-tint: rgba(90, 200, 250, 0.10);
+
+  /* Semantic — fixed across all apps */
+  --color-success-hex: #34C759;
+  --color-success-tint: rgba(52, 199, 89, 0.10);
+  --color-warning-hex: #FF9F0A;
+  --color-warning-tint: rgba(255, 159, 10, 0.10);
+  --color-destructive-hex: #FF3B30;
+  --color-destructive-tint: rgba(255, 59, 48, 0.10);
+  --color-info-hex: #007AFF;
+
+  /* Text */
+  --color-text-primary: #1D1D1F;
+  --color-text-secondary: #6E6E73;
+  --color-text-tertiary: #86868B;
+
+  /* Surfaces */
+  --color-bg-base: #FFFFFF;
+  --color-bg-grouped: #F5F5F7;
+  --color-bg-elevated: #FBFBFD;
+  --color-divider: #E5E5EA;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.10);
+
+  /* Spacing — 8px grid */
+  --space-1: 8px;  --space-2: 16px; --space-3: 24px; --space-4: 32px;
+  --space-6: 48px; --space-8: 64px; --space-10: 80px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* ── shadcn-compatible mappings (so all existing utilities keep working) ── */
+  --background: var(--color-bg-base);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-bg-base);
+  --card-foreground: var(--color-text-primary);
+  --popover: var(--color-bg-elevated);
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--color-primary-hex);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--color-bg-grouped);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-bg-grouped);
+  --muted-foreground: var(--color-text-secondary);
+  --accent: var(--color-primary-tint);
+  --accent-foreground: var(--color-primary-hex);
+  --destructive: var(--color-destructive-hex);
+  --destructive-foreground: #FFFFFF;
+  --border: var(--color-divider);
+  --input: var(--color-divider);
+  --ring: var(--color-primary-hex);
+
+  --chart-1: var(--color-primary-hex);
+  --chart-2: var(--color-secondary-hex);
+  --chart-3: var(--color-success-hex);
+  --chart-4: var(--color-warning-hex);
+  --chart-5: var(--color-destructive-hex);
+
+  --radius: 0.75rem; /* 12px — Apple HIG card/button base */
+
+  /* Sidebar */
+  --sidebar: var(--color-bg-grouped);
+  --sidebar-foreground: var(--color-text-primary);
+  --sidebar-primary: var(--color-primary-hex);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: var(--color-primary-tint);
+  --sidebar-accent-foreground: var(--color-primary-hex);
+  --sidebar-border: var(--color-divider);
+  --sidebar-ring: var(--color-primary-hex);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --color-text-primary: #F5F5F7;
+  --color-text-secondary: #98989D;
+  --color-text-tertiary: #6E6E73;
+  --color-bg-base: #1C1C1E;
+  --color-bg-grouped: #2C2C2E;
+  --color-bg-elevated: #3A3A3C;
+  --color-divider: #38383A;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.20);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.30);
+
+  --background: var(--color-bg-base);
+  --foreground: var(--color-text-primary);
+  --card: var(--color-bg-grouped);
+  --card-foreground: var(--color-text-primary);
+  --popover: var(--color-bg-elevated);
+  --popover-foreground: var(--color-text-primary);
+  --primary: var(--color-primary-hex);
+  --primary-foreground: #FFFFFF;
+  --secondary: var(--color-bg-grouped);
+  --secondary-foreground: var(--color-text-primary);
+  --muted: var(--color-bg-grouped);
+  --muted-foreground: var(--color-text-secondary);
+  --accent: var(--color-primary-tint);
+  --accent-foreground: #FFFFFF;
+  --destructive: var(--color-destructive-hex);
+  --destructive-foreground: #FFFFFF;
+  --border: var(--color-divider);
+  --input: var(--color-divider);
+  --ring: var(--color-primary-hex);
+
+  --sidebar: var(--color-bg-grouped);
+  --sidebar-foreground: var(--color-text-primary);
+  --sidebar-primary: var(--color-primary-hex);
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: var(--color-primary-tint);
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: var(--color-divider);
+  --sidebar-ring: var(--color-primary-hex);
 }
 
 @layer base {
@@ -122,9 +183,17 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    letter-spacing: -0.005em;
   }
   html {
     @apply font-sans;
   }
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
+  }
+  h1 { line-height: 1.1; }
+  h2, h3 { line-height: 1.2; }
+  p { line-height: 1.55; }
 }

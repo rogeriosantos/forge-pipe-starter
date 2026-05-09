@@ -7,7 +7,7 @@ test.describe.configure({ mode: "serial" })
 
 test("smoke: login → CRUD → logout", async ({ page }) => {
   await page.goto("/login")
-  await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Welcome back" })).toBeVisible()
 
   await page.getByLabel("Email").fill(SEED_EMAIL)
   await page.getByLabel("Password").fill(SEED_PASSWORD)
@@ -18,7 +18,7 @@ test("smoke: login → CRUD → logout", async ({ page }) => {
 
   await page.getByRole("link", { name: "Items" }).first().click()
   await page.waitForURL("**/items")
-  await expect(page.getByRole("heading", { name: "Items", exact: true })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "All items", exact: true })).toBeVisible()
 
   const stamp = Date.now()
   const title = `Smoke item ${stamp}`
@@ -49,5 +49,5 @@ test("smoke: login → CRUD → logout", async ({ page }) => {
   await page.getByRole("button", { name: "User menu" }).click()
   await page.getByRole("menuitem", { name: "Sign out" }).click()
   await page.waitForURL("**/login")
-  await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Welcome back" })).toBeVisible()
 })
