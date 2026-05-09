@@ -14,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select';
+import { SearchableCombobox } from '@/components/ui/searchable-combobox';
 import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent,
@@ -309,53 +310,32 @@ export function SmartTable<T extends Record<string, unknown>>({
         )}
       </div>
 
-      {/* Column filter bar */}
+      {/* Column filter bar — every combobox uses SearchableCombobox per project mandate */}
       {filterableCols.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {filterableCols.map((col) => {
-            const opts = [...new Set(data.map((r) => String(r[col.key] ?? '')))].sort();
             const label = col.header ?? keyToLabel(col.key);
-            const current = colFilters[col.key];
-            const hasFilter = !!current && current !== '__all__';
+            const opts = [...new Set(data.map((r) => String(r[col.key] ?? '')))]
+              .sort()
+              .map((v) => ({ value: v, label: v || '(empty)' }));
             return (
-              <Select
+              <SearchableCombobox
                 key={col.key}
-                value={current ?? '__all__'}
-                onValueChange={(v) =>
+                options={opts}
+                value={colFilters[col.key] ?? ''}
+                onChange={(v) =>
                   setColFilters((p) => {
                     const next = { ...p };
-                    if (!v || v === '__all__') delete next[col.key];
+                    if (!v) delete next[col.key];
                     else next[col.key] = v;
                     return next;
                   })
                 }
-              >
-                <SelectTrigger className="h-9 min-w-[140px] text-sm">
-                  <SelectValue>
-                    {(value: string | null) =>
-                      value && value !== '__all__' ? (
-                        <span className="truncate">
-                          <span className="text-muted-foreground">{label}: </span>
-                          <span className="font-medium">{value}</span>
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground">{label}</span>
-                      )
-                    }
-                  </SelectValue>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="__all__">
-                    All {label}
-                    {hasFilter && <span className="ml-1 text-xs text-muted-foreground">(clear)</span>}
-                  </SelectItem>
-                  {opts.map((v) => (
-                    <SelectItem key={v} value={v}>
-                      {v || '(empty)'}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder={label}
+                searchPlaceholder={`Search ${label.toLowerCase()}…`}
+                emptyMessage="No matching values."
+                className="w-auto min-w-[180px] h-10 text-sm"
+              />
             );
           })}
         </div>
