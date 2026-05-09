@@ -1,0 +1,81 @@
+name: smoke
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: forge
+          POSTGRES_PASSWORD: forge
+          POSTGRES_DB: forge_pipe
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U forge -d forge_pipe"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+psycopg://forge:forge@localhost:5432/forge_pipe
+      JWT_SECRET: ci-secret-not-for-prod
+      AUTH_SECRET: ci-auth-secret-not-for-prod
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+      AUTH_URL: http://localhost:3000
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Set up Python
+        run: uv python install 3.12
+
+      - name: Install backend deps + migrate + seed
+        working-directory: backend
+        run: |
+          uv sync
+          uv run alembic upgrade head
+          uv run python -m app.scripts.seed
+
+      - name: Start backend
+        working-directory: backend
+        run: |
+          uv run uvicorn app.main:app --port 8000 --log-level warning &
+          for i in {1..30}; do curl -sf http://localhost:8000/healthz && break; sleep 1; done
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install frontend deps
+        working-directory: frontend
+        run: npm ci
+
+      - name: Start frontend
+        working-directory: frontend
+        run: |
+          npm run build
+          npm run start -- -p 3000 &
+          for i in {1..60}; do curl -sf http://localhost:3000 && break; sleep 1; done
+
+      - name: Install Playwright + run smoke
+        working-directory: e2e
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+          npm test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: e2e/playwright-report/
+          retention-days: 7

@@ -61,10 +61,7 @@ export function ItemRowActions({ itemId, title }: { itemId: string; title: strin
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
-            onSelect={(e) => {
-              e.preventDefault()
-              setOpen(true)
-            }}
+            onClick={() => setOpen(true)}
             variant="destructive"
           >
             <Trash2 className="h-4 w-4" />

@@ -6,6 +6,7 @@ import { LogOut } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -20,24 +21,33 @@ export function UserMenu({ email, name }: { email: string; name: string | null }
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="ghost" className="h-9 gap-2 px-2" />}>
+      <DropdownMenuTrigger
+        render={
+          <Button
+            variant="ghost"
+            className="h-9 gap-2 px-2"
+            aria-label="User menu"
+          />
+        }
+      >
         <Avatar className="h-7 w-7">
           <AvatarFallback className="text-xs">{initials}</AvatarFallback>
         </Avatar>
         <span className="hidden text-sm font-medium sm:inline">{name ?? email}</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
-        <DropdownMenuLabel className="font-normal">
-          <div className="flex flex-col">
-            <span className="text-sm font-medium">{name ?? "Account"}</span>
-            <span className="text-xs text-muted-foreground">{email}</span>
-          </div>
-        </DropdownMenuLabel>
+        <DropdownMenuGroup>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col">
+              <span className="text-sm font-medium">{name ?? "Account"}</span>
+              <span className="text-xs text-muted-foreground">{email}</span>
+            </div>
+          </DropdownMenuLabel>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           disabled={isPending}
-          onSelect={(e) => {
-            e.preventDefault()
+          onClick={() => {
             startTransition(async () => {
               await signOut({ callbackUrl: "/login" })
             })
