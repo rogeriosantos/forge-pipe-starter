@@ -314,18 +314,46 @@ export function SmartTable<T extends Record<string, unknown>>({
         <div className="flex flex-wrap gap-2">
           {filterableCols.map((col) => {
             const opts = [...new Set(data.map((r) => String(r[col.key] ?? '')))].sort();
+            const label = col.header ?? keyToLabel(col.key);
+            const current = colFilters[col.key];
+            const hasFilter = !!current && current !== '__all__';
             return (
               <Select
                 key={col.key}
-                value={colFilters[col.key] ?? '__all__'}
-                onValueChange={(v) => setColFilters((p) => ({ ...p, [col.key]: v ?? '__all__' }))}
+                value={current ?? '__all__'}
+                onValueChange={(v) =>
+                  setColFilters((p) => {
+                    const next = { ...p };
+                    if (!v || v === '__all__') delete next[col.key];
+                    else next[col.key] = v;
+                    return next;
+                  })
+                }
               >
-                <SelectTrigger className="h-8 w-auto min-w-[120px] text-xs">
-                  <SelectValue placeholder={col.header ?? keyToLabel(col.key)} />
+                <SelectTrigger className="h-9 min-w-[140px] text-sm">
+                  <SelectValue>
+                    {(value: string | null) =>
+                      value && value !== '__all__' ? (
+                        <span className="truncate">
+                          <span className="text-muted-foreground">{label}: </span>
+                          <span className="font-medium">{value}</span>
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">{label}</span>
+                      )
+                    }
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="__all__">All {col.header ?? keyToLabel(col.key)}</SelectItem>
-                  {opts.map((v) => <SelectItem key={v} value={v}>{v || '(empty)'}</SelectItem>)}
+                  <SelectItem value="__all__">
+                    All {label}
+                    {hasFilter && <span className="ml-1 text-xs text-muted-foreground">(clear)</span>}
+                  </SelectItem>
+                  {opts.map((v) => (
+                    <SelectItem key={v} value={v}>
+                      {v || '(empty)'}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             );
