@@ -282,30 +282,40 @@ export function SmartTable<T extends Record<string, unknown>>({
     <div className={cn('w-full space-y-3', className)}>
 
       {/* Search bar */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground pointer-events-none" />
           <Input
             aria-label="Search table"
             placeholder="Search… (use + for AND)"
             value={rawQuery}
             onChange={(e) => setRawQuery(e.target.value)}
-            className="pl-9"
+            className={cn('pl-10', rawQuery ? 'pr-10' : 'pr-4')}
           />
+          {rawQuery && (
+            <button
+              type="button"
+              aria-label="Clear search"
+              onClick={() => setRawQuery('')}
+              className="absolute right-2 top-1/2 flex size-7 -translate-y-1/2 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <X className="size-4" />
+            </button>
+          )}
         </div>
         <span className="shrink-0 text-sm text-muted-foreground whitespace-nowrap">
           Showing {processed.length} of {data.length} results
         </span>
-        {(activeFilterCount > 0 || rawQuery) && (
+        {activeFilterCount > 0 && (
           <Button
             variant="ghost" size="sm"
-            onClick={() => { setColFilters({}); setRawQuery(''); }}
-            className="gap-1"
+            onClick={() => setColFilters({})}
+            className="gap-1.5"
+            aria-label={`Clear ${activeFilterCount} column ${activeFilterCount === 1 ? 'filter' : 'filters'}`}
           >
-            <X className="h-3 w-3" /> Clear
-            {activeFilterCount > 0 && (
-              <Badge variant="secondary" className="ml-1">{activeFilterCount}</Badge>
-            )}
+            <X className="size-3.5" />
+            Clear filters
+            <Badge variant="secondary" className="ml-1">{activeFilterCount}</Badge>
           </Button>
         )}
       </div>
