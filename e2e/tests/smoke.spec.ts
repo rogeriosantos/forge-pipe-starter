@@ -18,7 +18,7 @@ test("smoke: login → CRUD → logout", async ({ page }) => {
 
   await page.getByRole("link", { name: "Items" }).first().click()
   await page.waitForURL("**/items")
-  await expect(page.getByRole("heading", { name: "Items" })).toBeVisible()
+  await expect(page.getByRole("heading", { name: "Items", exact: true })).toBeVisible()
 
   const stamp = Date.now()
   const title = `Smoke item ${stamp}`
