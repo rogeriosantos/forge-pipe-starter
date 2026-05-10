@@ -21,6 +21,10 @@ import {
   DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import {
   normalize, rowMatchesSearch, compareValues, keyToLabel,
   loadPrefs, savePrefs, clearPrefs, TablePrefs,
 } from '@/lib/smart-table-utils';
@@ -44,6 +48,8 @@ interface SmartTableProps<T extends Record<string, unknown>> {
   defaultSortDir?: 'asc' | 'desc';
   isLoading?: boolean;
   className?: string;
+  /** Custom empty state when data.length === 0. Falls back to a generic block. */
+  emptyState?: React.ReactNode;
 }
 
 const PAGE_SIZES = [10, 25, 50, 75, 100];
@@ -59,6 +65,7 @@ export function SmartTable<T extends Record<string, unknown>>({
   defaultSortDir = 'asc',
   isLoading = false,
   className,
+  emptyState,
 }: SmartTableProps<T>) {
 
   // ── Build base column definitions ─────────────────────────────────────────
@@ -222,8 +229,8 @@ export function SmartTable<T extends Record<string, unknown>>({
   };
 
   // ── Reset to defaults ─────────────────────────────────────────────────────
-  const handleReset = () => {
-    if (!window.confirm('Reset table to default settings?')) return;
+  const [resetConfirmOpen, setResetConfirmOpen] = React.useState(false);
+  const performReset = () => {
     clearPrefs(tableId);
     const defaultOrder = baseCols.map((c) => c.key);
     const defaultWidths: Record<string, number> = {};
@@ -237,6 +244,7 @@ export function SmartTable<T extends Record<string, unknown>>({
     setPageSize(defaultPageSize);
     setPage(1);
     setRawQuery('');
+    setResetConfirmOpen(false);
   };
 
   // ── Context menu for column visibility ───────────────────────────────────
@@ -274,6 +282,24 @@ export function SmartTable<T extends Record<string, unknown>>({
             </div>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  // ── Empty state (no data at all) ─────────────────────────────────────────
+  // When the dataset itself is empty, skip search/filter chrome — the user
+  // can't search what doesn't exist. Show a designed empty state instead.
+  if (data.length === 0) {
+    return (
+      <div className={cn('w-full', className)}>
+        {emptyState ?? (
+          <div className="flex flex-col items-center rounded-xl border border-dashed py-16 text-center">
+            <p className="text-base font-medium">No data available</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Items added to this table will show up here.
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -450,7 +476,7 @@ export function SmartTable<T extends Record<string, unknown>>({
             <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={safePage === 1}>Prev</Button>
             <Button variant="outline" size="sm" onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={safePage === totalPages}>Next</Button>
             <Button variant="outline" size="sm" onClick={() => setPage(totalPages)} disabled={safePage === totalPages}>Last</Button>
-            <Button variant="ghost" size="icon" onClick={handleReset} title="Reset table to defaults" className="h-7 w-7 ml-2 text-muted-foreground hover:text-foreground">
+            <Button variant="ghost" size="icon-sm" onClick={() => setResetConfirmOpen(true)} title="Reset table to defaults" aria-label="Reset table to defaults" className="ml-2 text-muted-foreground hover:text-foreground">
               <Settings2 className="h-4 w-4" />
             </Button>
           </div>
@@ -493,6 +519,29 @@ export function SmartTable<T extends Record<string, unknown>>({
           </button>
         </div>
       )}
+
+      {/* Reset-to-defaults confirmation */}
+      <AlertDialog open={resetConfirmOpen} onOpenChange={setResetConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Reset table to defaults?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This clears your saved column order, widths, sort, filters, search, and page size for this table. Other tables are not affected.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => {
+                e.preventDefault();
+                performReset();
+              }}
+            >
+              Reset
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

@@ -98,7 +98,7 @@ export function ItemForm(props: Props) {
         <Button type="submit" disabled={isPending}>
           {isPending ? "Saving…" : props.mode === "create" ? "Create item" : "Save changes"}
         </Button>
-        <Link href="/items" className={buttonVariants({ variant: "ghost" })}>Cancel</Link>
+        <Link href="/items" className={buttonVariants({ variant: "outline" })}>Cancel</Link>
       </div>
     </form>
   )

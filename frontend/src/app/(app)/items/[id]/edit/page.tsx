@@ -3,6 +3,7 @@ import { notFound } from "next/navigation"
 import { auth } from "@/auth"
 import { itemsApi } from "@/lib/api/items"
 import { ApiHttpError } from "@/lib/api"
+import { PageHeader } from "@/components/page-header"
 import { ItemForm } from "../../item-form"
 
 export const metadata: Metadata = { title: "Edit item" }
@@ -21,11 +22,12 @@ export default async function EditItemPage({ params }: { params: Promise<{ id: s
   }
 
   return (
-    <div className="grid gap-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Edit item</h1>
-        <p className="mt-1 text-sm text-muted-foreground">Update the details below.</p>
-      </div>
+    <div>
+      <PageHeader
+        back={{ href: "/items", label: "Items" }}
+        title={item.title}
+        description="Update the details below."
+      />
       <ItemForm mode="edit" item={item} />
     </div>
   )

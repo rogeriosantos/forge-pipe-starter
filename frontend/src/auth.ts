@@ -86,12 +86,10 @@ export const {
     authorized({ auth: session, request }) {
       const { pathname } = request.nextUrl
       const isAuthed = !!session?.user
-      const isAuthPage =
-        pathname === "/login" ||
-        pathname === "/signup" ||
-        pathname.startsWith("/forgot-password") ||
-        pathname.startsWith("/reset-password") ||
-        pathname.startsWith("/verify-email")
+      // v0.1 ships only /login. Other auth flows (signup, forgot/reset password,
+      // verify email) are deferred to v0.2 — when added, list them here so
+      // authenticated users get redirected away from them.
+      const isAuthPage = pathname === "/login"
       const isPublic = pathname === "/" || pathname.startsWith("/legal")
 
       if (isAuthed && isAuthPage) {

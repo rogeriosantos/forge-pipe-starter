@@ -22,6 +22,9 @@ export default function LoginPage() {
           </p>
         </div>
         <LoginForm />
+        <p className="mt-8 text-center text-sm text-muted-foreground">
+          Don&apos;t have an account? Contact your administrator. Self-service signup arrives in v0.2.
+        </p>
       </div>
     </main>
   )

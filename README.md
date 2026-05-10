@@ -8,12 +8,14 @@ This repo is the foundation of the pipeline. The plugin clones it (at a pinned c
 
 A real, deployable, two-tier app:
 
-- **Frontend** — Next.js 15 App Router · TypeScript · Tailwind · shadcn/ui · NextAuth v5 · next-intl
-  - Auth flows: login · signup · forgot/reset password · email verification · OAuth slots (Google, GitHub)
-  - Account pages: profile (read+edit) · settings (account, security, notifications, danger zone)
-  - App shell: sidebar · topbar · responsive mobile drawer · theme switcher
-  - Error pages: 404 · 500 · 403
+- **Frontend** — Next.js 16 App Router · TypeScript · Tailwind · shadcn/ui (base-nova) · NextAuth v5
+  - Auth: credentials login (signup, forgot/reset password, email verification, OAuth — see "v0.1 deferrals" below)
+  - Account pages: profile (read-only — see deferrals)
+  - App shell: collapsible sidebar (Cmd-B) · responsive mobile drawer · theme tokens
+  - Error pages: 404 · 500 · 403, plus a (app)-scoped error boundary that preserves the app shell
+  - SmartTable on every list (sort · `+`-AND search · auto column filters via SearchableCombobox · column show/hide via right-click · resize · drag-reorder · pagination · localStorage persistence per `tableId` · gear-reset with confirm dialog)
   - One example CRUD module (`/items`) wired end-to-end as the **reference shape** every plugin-generated CRUD follows
+  - PageHeader component for consistent kicker / title / description / back-arrow / actions across pages
   - Typed API client with auth header injection
 - **Backend** — FastAPI · PostgreSQL · SQLAlchemy 2.0 · Alembic · Pydantic v2 · uv
   - JWT verification middleware compatible with NextAuth v5 sessions (shared secret)
@@ -30,6 +32,27 @@ A real, deployable, two-tier app:
 - **NextAuth v5 (Auth.js)** — the standard auth solution for Next.js App Router. No Supabase anywhere.
 - **FastAPI + Postgres** — explicit backend with full control. No Supabase as a backend either.
 - **Single starter, single stack** — narrow scope, deeply tested. Variants live in branches, not in this main path.
+
+## v0.1 deferrals (intentional)
+
+This starter is the *foundation*. It ships with the bare minimum that's actually wired and tested. The following are documented gaps to be added in v0.2:
+
+| Feature | Status | Notes |
+|---|---|---|
+| Self-service signup UI | deferred | Use the seeded user `demo@forge-pipe.dev` / `demo1234`. Login page links to "contact administrator" copy. |
+| Forgot password / reset | deferred | Backend endpoints exist as stubs only |
+| Email verification | deferred | `email_verified` field exists; verification flow doesn't |
+| Profile editing | deferred | Profile page is read-only with a disabled Edit button (tooltip explains v0.2) |
+| Settings (account / security / notifications / danger zone) | deferred | Add a `/settings` route + sub-pages |
+| Billing / Stripe | not in scope | Add as an optional baseline module |
+| Teams / multi-tenancy | not in scope | Add as an optional baseline module |
+| Admin pages | not in scope | Add per project |
+| Legal (terms / privacy / cookie) | not in scope | Add per project before launch |
+| OAuth (Google / GitHub) | slot ready | Set `AUTH_GOOGLE_ID` / `AUTH_GITHUB_ID` in `.env.local` to enable |
+| Theme switcher (light/dark) | tokens only | Light by default; dark token block exists; UI toggle deferred |
+| i18n | not yet | next-intl is NOT wired in v0.1 — defer until you actually need translation |
+
+These are explicit. If your project needs any of these on day one, add them after `/pipe:scaffold` and before `/pipe:features` as additional baseline modules in your project's PRD.
 
 ## Quick start
 
